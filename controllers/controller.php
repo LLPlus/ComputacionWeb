@@ -1,8 +1,9 @@
 <!-- Luis Cruz -->
-<!-- Controlador para la sesion de usuario, manipula la informacion entre la vistas y la clases, y se conecta a la base de datos
+<!-- Controlador para la sesion de usuario, manipula la informacion entre la vistas y la clases, y se conecta a la base de datos -->
 
 <?php
 	//seccion de inicializacion de datos
+	date_default_timezone_set('America/Mexico_City');
 	session_start(); //inicia la sesion de usuario
 	require_once("../models/model.php"); //obtiene las clases del modelo
     $usuarios = new Usuario();
@@ -12,9 +13,8 @@
 	$textoc=$_GET['textoc'];
 	
 	//seccion de expirar sesion de n 5 minutos
-	if(time()-$_SESSION['time']>300) { // si la sesion tiene mas de 5 minutos, entonces expira y cierra sesion
-		session_unset(); //quita la informacion de la sesion de usuario
-		session_destroy(); //destruye la sesion de usuario	
+	if(isset($_SESSION['name']) && time()-$_SESSION['time']>300) { // si la sesion tiene mas de 5 minutos, entonces expira y cierra sesion
+		require_once("../views/view_logout.php");	
 		}
 	else{
 	$_SESSION['time']=time(); //en caso que no expire, renueva el tiempo de sesion
@@ -22,9 +22,8 @@
 	
 	//seccion para cerrar sesion
 	if ($_GET['option']=="logout") {
-		session_unset(); //quita la informacion de la sesion de usuario
-		session_destroy(); //destruye la sesion de usuario
-	}	
+		require_once("../views/view_logout.php"); //ejecuta la vista para ver estaciones\
+	}
 	
 	//seccion para ver estaciones desde la liga
 	if ($_GET['option']=="look") {
@@ -36,20 +35,20 @@
 	if (isset($_POST['insert_button'])) {
 		for ($i = 0; $i < count($datos1); $i++) { 
 			if($_POST['apodo'] == $datos1[$i]["apodo"]){ //revisa si existe el usuario en la base de datos
-				$textoc="Nombre de Usuario ya existe";
+				?> <script>alert("Ya existe nombre de usuario");</script> <?php
 				require_once("../views/view_create.php"); //vuelve a aparecer la pantalla de registro, colocando un mensaje extra
 				exit;
 			}
 		}
 		if ((isset($_POST['apodo'])) && ($_POST['apodo'] != '') && (isset($_POST['nombre'])) && ($_POST['nombre'] != '') && (isset($_POST['correo'])) && ($_POST['correo'] != '') && (isset($_POST['contrasena'])) && ($_POST['contrasena'] != '') ) { // se verifica que se haya ingresado todos los campos		
 			$usuarios->setUsuario($_POST['apodo'], $_POST['nombre'], $_POST['correo'], sha1($_POST['contrasena']));  // la informacion ingresa en el formulario de view_create se registra como un nuevo usuario, insertando la informacion en la tabla de usuarios de la base de datos		
-			$textoc="Usuario Creado Correctamente";
-			header("Location:../controllers/controller.php?textoc=".$textoc); //se redirige al controlador para iniciar sesion
+			?> <script>alert("Usuario creado correctamente"); 
+			location.replace("../controllers/controller.php")</script><?php
 			exit;			
 		}
 		else //en caso que no se haya ingresado todos los datos requeridos en el formulario
 		{
-			$textoc="Usuario no se creo, falto un dato";
+			?> <script>alert("Usuario no creado, hizo falta un fato");</script> <?php
 			require_once("../views/view_create.php"); //vuelve a aparecer la pantalla de registro, colocando un mensaje extra de que no se creo el usuario
 			exit;
 		}
@@ -76,26 +75,34 @@
 	
 	//seccion para añadir estaciones de radio
 	if ($_GET['option']=="add" || isset($_POST['add_button'])){		
+	?> <script>alert("Add Button Detected");</script> <?php
+	
 		if(isset($_SESSION['name']) && !empty($_SESSION['name'])) { //se verifica que este una sesion de usuario abierta
-			$estaciones = new Estacion(); //variable de estacioens, para manipular la tabla de la base de datos
-			if ( (isset($_POST['nombre'])) && ($_POST['nombre'] != '' && (isset($_POST['liga'])) && ($_POST['liga'] != '') && (isset($_POST['fecha'])) && ($_POST['fecha'] != '') && (isset($_POST['hora'])) && ($_POST['hora'] != ''))  ) { //se verifica que se haya ingresado toda la informacion requerida en el formulario para nueva estacion			
-				$estaciones->setEstacion($_POST['nombre'], $_POST['liga'], $_POST['fecha'], $_POST['hora'],$_SESSION['name']); // se inserta la informacion de la nueva estacion
-				$datos2 = $estaciones->getEstaciones(); //refresca la lista de estaciones
-				$textoc="Estacion añadida exitosamente";
+		?> <script>alert("Sesion Detected"); </script><?php
+		
+			$estaciones = new Estacion(); //variable de estacioens, para manipular la tabla de la base de datos			
+			
+			if ( (isset($_COOKIE['jsname'])) && ($_COOKIE['jsname'] != '') && (isset($_COOKIE['jsweb'])) && ($_COOKIE['jsweb'] != '')) {
+			?> <script>alert("Info detected");</script> <?php
+				
+				$estaciones->setEstacion($_COOKIE['jsname'], $_COOKIE['jsweb'], date("Y-m-d"), date('H:i:s'),$_SESSION['name']); // se inserta la informacion de la nueva estacion
+				
+				$datos2 = $estaciones->getEstaciones(); //refresca la lista de estaciones				
+				?> <script>alert("Estación Añadida Exitosamente");</script> <?php
 				require_once("../views/view_look.php"); //se redirige a la vista de mirar estaciones				
 				exit;
 			}
 			else
 			{
-				$textoc="Falto algn dato para ingresar";
-				require_once("../views/view_add.php"); // en caso que este la sesion abierta, pero no se haya ingresado toda la informacion de la nueva sesion, se regresara para ingresar una nueva estacion
+				?> <script>alert("Falto algun dato para ingresar");</script> <?php	
+				require_once("../views/view_main.php"); // en caso que este la sesion abierta, pero no se haya ingresado toda la informacion de la nueva sesion, se regresara para ingresar una nueva estacion
 				exit;
 			}
 		}
 		else
 		{	//en caso que no exista un inicio de sesion, se redirigira la pantalla de inicio de sesion
-			$textoc="No hay inicio de sesion";				
-			header("location: ../controllers/controller.php?textoc=".$textoc); 
+			?> <script>alert("Fallo, no hay inicio de sesión");
+			location.replace("../controllers/controller.php")</script><?php
 			exit;
 		}
 	}
@@ -107,22 +114,21 @@
 			$datos2 = $estaciones->getEstaciones();			
 			if ( (isset($_POST['nombre'])) && ($_POST['nombre'] != '' && (isset($_POST['liga'])) && ($_POST['liga'] != '') && (isset($_POST['fecha'])) && ($_POST['fecha'] != '') && (isset($_POST['hora'])) && ($_POST['hora'] != ''))  ) { //se verifica que se haya ingresado toda la informacion requerida en el formulario para nueva estacion		
 				$estaciones->updEstacion($datos2[$_POST['editid']]["id"],$_POST['nombre'], $_POST['liga'], $_POST['fecha'], $_POST['hora']); // se inserta la informacion de la nueva estacion				
-				//$textoc="Estacion editada exitosamente";
-				$textoc=$datos2[$_POST['editid']]["id"];
-				header("location: ../controllers/controller.php?textoc=".$textoc);  //se redirige a la vista de estaciones
+				?> <script>alert("Estación Editada Exitosamente");
+				location.replace("../controllers/controller.php")</script><?php
 				exit;
 			}			
 			else
 			{
-				$textoc="No se edito la estación , falto algun dato para ingresar";				
+				?> <script>alert("No se edito la estación");</script> <?php	
 				require_once("../views/view_look.php"); //se redirige a la vista de estaciones
 				exit;
 			}
 		}
 		else
 		{	//en caso que no exista un inicio de sesion, se redirigira la pantalla de inicio de sesion
-			$textoc="No hay inicio de sesion";				
-			header("location: ../controllers/controller.php?textoc=".$textoc); 
+			?> <script>alert("No hay inicio de sesión");
+			location.replace("../controllers/controller.php")</script><?php
 			exit;
 		}
 	}
@@ -135,43 +141,46 @@
 			if($datos2[$_GET['xid']]["id_usuario"]==$_SESSION['name']){
 				$estaciones->delEstacion( $datos2[$_GET['xid']]["id"] ); //se borra la estacion
 				$datos2 = $estaciones->getEstaciones(); //refresca la lista de estaciones
-				$textoc="Estacion borrada exitosamente";
-				header("location: ../controllers/controller.php?textoc=".$textoc);  //se redirige a la vista de estaciones
+				?> <script>alert("Eliminación Exitosa");
+				location.replace("../controllers/controller.php")</script><?php
 				exit;
 			}			
 			else
 			{
-				$textoc="Falto algun dato para ingresar";
+				?> <script>alert("Fallo en la eliminación");</script> <?php	
 				require_once("../views/view_look.php"); //se redirige a la vista de estaciones
 				exit;
 			}
 		}
 		else
 		{	//en caso que no exista un inicio de sesion, se redirigira la pantalla de inicio de sesion
-			$textoc="No hay inicio de sesion";				
-			header("location: ../controllers/controller.php?textoc=".$textoc); 
+			?> <script>alert("Error, No hay inicio de sesión");
+			location.replace("../controllers/controller.php")</script><?php
 			exit;
 		}
 	}
 	
 	//seccion para iniciar sesion
-	if(isset($_POST['apodo'])) //verifica si hubo alguna entrada de informacion
+	if(isset($_COOKIE["jsuser"])) //verifica si hubo alguna entrada de informacion
 	{
 		for ($i = 0; $i < count($datos1); $i++) { 
-			if($_POST['apodo'] == $datos1[$i]["apodo"]){ //revisa si existe el usuario en la base de datos
-				if(sha1($_POST['contrasena']) == $datos1[$i]["contrasena"]){ //verifica que la contraseña coincida
+			if($_COOKIE["jsuser"] == $datos1[$i]["apodo"]){ //revisa si existe el usuario en la base de datos								
+				if(sha1($_COOKIE["jspass"]) == $datos1[$i]["contrasena"]){ //verifica que la contraseña coincida
 					session_start();
 					$_SESSION['name']=$datos1[$i]["id"]; //en caso que si, asigna el usuario a la sesion
+					$_SESSION['user']=$datos1[$i]["apodo"]; //en caso que si, asigna el usuario a la sesion
+					$_SESSION['fullname']=$datos1[$i]["nombre"]; //en caso que si, asigna el usuario a la sesion
+					$_SESSION['mail']=$datos1[$i]["correo"]; //en caso que si, asigna el usuario a la sesion
 					$_SESSION['time']=time();
 					$i=count($datos1);
-					$textoc="Inicio de Sesion Exitoso";															
+					?> <script>alert("Inicio de Sesión Exitoso");</script> <?php
 					require_once("../views/view_look.php"); //se ejecuta la vista para ver las estaciones
 					exit;
 				}
 			}
 		}
-		$textoc="Fallo en iniciar sesion";		
-		require_once("../views/view_login.php");	// en caso que no encuentra al usuario o no coincida la contraseña, regresa al inicio de sesion
+		?> <script>alert("Inicio de Sesión Incorrecta");</script> <?php	
+		require_once("../views/view_main.php");	// en caso que no encuentra al usuario o no coincida la contraseña, regresa al inicio de sesion
 		exit;
 	}
 	else{
@@ -180,6 +189,6 @@
 			exit;
 		}
 	}
-    require_once("../views/view_login.php"); //en caso que no este en sesion, y no se intente ingresar, se redirigira a la pantalla de inicio de sesion
+    require_once("../views/view_main.php"); //en caso que no este en sesion, y no se intente ingresar, se redirigira a la pantalla de inicio de sesion
 	exit;
 ?>
