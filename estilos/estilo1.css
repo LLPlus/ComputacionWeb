@@ -1,0 +1,185 @@
+/* El side del menu de navegacion */
+.sidenav {
+  height: 100%; 
+  width: 0; 
+  position: fixed; 
+  z-index: 1; 
+  top: 0; 
+  left: 0;
+  background-color: #110; 
+  overflow-x: hidden; 
+  padding-top: 59px; 
+  transition: 0.6s;
+}
+
+/* Links de Navegacion */
+.sidenav a {
+  padding: 7px 7px 7px 32px;
+  text-decoration: none;
+  font-size: 24px;
+  color: #818070;
+  display: block;
+  transition: 0.4s;
+}
+
+/* Debajo del mouse */
+.sidenav a:hover {
+  color: #f2f2f2;
+}
+
+/* Boton de Close */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 24px;
+  font-size: 35px;
+  margin-left: 50px;
+}
+
+/* Estilo de Letra */
+.sidenav p {
+  padding: 7px 7px 7px 32px;
+  text-decoration: none;
+  font-size: 15px;
+  color: white;
+  display: block;
+  transition: 0.4s;
+}
+
+/* Main de la navegacion */
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
+}
+
+/* Estilo de pantalla */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+/* Forma superior */
+div.container{
+width: 895px;
+height: 345px;
+margin:10px ;
+font-family: 'Raleway', sans-serif;
+}
+
+/* Contenedor de la forma superior */
+div.main{
+width: 300px;
+padding: 10px 25px 25px;
+border: 2px solid gray;
+border-radius: 10px;
+font-family: Times;
+float:center;
+}
+
+/* Estilo de los inputs */
+input.log{
+width: 100%;
+height: 20px;
+padding: 5px;
+margin-bottom: 10px;
+margin-top: 5px;
+border: 2px solid #ccc;
+color: #4f4f4f;
+font-size: 15px;
+border-radius: 5px;
+}
+
+/* Estilo de las etiquetas */
+label{
+color: #464646;
+text-shadow: 0 1px 0 #fff;
+font-size: 14px;
+font-weight: bold;
+}
+
+/* Decoracion */
+.back{
+text-decoration: none;
+border: 1px solid rgb(0, 143, 255);
+background-color: rgb(0, 214, 255);
+padding: 3px 20px;
+border-radius: 2px;
+color: black;
+}
+
+/* Input del Boton */
+input[type=button]{
+font-size: 16px;
+background: linear-gradient(#ffbc00 5%, #ffdd7f 100%);
+border: 1px solid #e5a900;
+color: #4E4D4B;
+font-weight: bold;
+cursor: pointer;
+width: 100%;
+border-radius: 5px;
+padding: 10px 0;
+outline:none;
+}
+input[type=button]:hover{
+background: linear-gradient(#ffdd7f 5%, #ffbc00 100%);
+}
+
+/* Ligas del Tab */
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 25%;
+}
+
+/* Mouse arriba */
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Contenido de los tabs */
+.tabcontent {
+  color: black;
+  display: none;
+  padding: 50px;
+  text-align: center;
+}
+
+/* Estilo de colores */
+#menured{background-color:#ff9999;}
+#menugreen {background-color:lightgreen;}
+#menublue {background-color:lightblue;}
+#menuyellow {background-color:#FFF673;}
+
+/* Estilo de navegacion superior*/
+.topnav {
+  background-color: #333;
+  overflow: hidden;
+}
+
+/* Ligas de la navegacion Superior */
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Estilo debajo del mouse */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Color del tab activo */
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
