@@ -1,9 +1,8 @@
 <!-- Luis Cruz -->
-<!-- Vista para pruebas, despliega la lista de usuarios -->
+<!-- Despliega la lista de usuarios -->
 
 <!DOCTYPE html>
-<?php $titulo="Testing - Lista de Usuarios"; //variable para el titulo en el layout de las vistas
-require_once("../views/layout_top.php"); ?>	<!-- parte del layout para las vistas -->
+<?php require_once("../views/layout.php"); ?>	<!-- parte del layout para las vistas -->
    <div class="col-lg-6">
 		<hr/>                		
 		<?php
